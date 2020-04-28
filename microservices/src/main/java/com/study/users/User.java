@@ -2,9 +2,16 @@ package com.study.users;
 
 import java.util.Date;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 public class User {
 	private Integer id;
+	
+	@Size(min=3, message = "name should have at least 3 char")//it means name at 3 char
 	private String name;
+	
+	@Past //it means birthdate always be past date not future date
 	private Date birthDate;	
 	
 	protected User() {
