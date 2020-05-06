@@ -14,8 +14,22 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class CurrencyCoverterService {	
 	
+	@Autowired
+	private CurrenyExchangeServiceProxy proxy;
+	
 	@GetMapping("/currency-convertor/from/{from}/to/{to}/quantity/{quantity}")
 	public CurrencyCoverterBean currencyCovertor(@PathVariable String from, @PathVariable String to,
+			                                      @PathVariable BigDecimal quantity) {		
+		
+		CurrencyCoverterBean responseBody = proxy.currenceExchange(from, to);		
+		return new CurrencyCoverterBean(responseBody.getId(), from, to, responseBody.getConversionMultiple(),
+				quantity,quantity.multiply(responseBody.getConversionMultiple()), responseBody.getPort());
+		
+	}
+	
+	
+	@GetMapping("/currency-convertor-feign/from/{from}/to/{to}/quantity/{quantity}")
+	public CurrencyCoverterBean currencyCovertorFeign(@PathVariable String from, @PathVariable String to,
 			                                      @PathVariable BigDecimal quantity) {
 		
 		String url="http://localhost:8000/currency-exchange/from/{from}/to/{to}";
@@ -31,5 +45,6 @@ public class CurrencyCoverterService {
 				quantity,quantity.multiply(responseBody.getConversionMultiple()), responseBody.getPort());
 		
 	}
+
 
 }
